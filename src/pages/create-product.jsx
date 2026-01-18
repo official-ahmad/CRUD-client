@@ -31,7 +31,12 @@ function CreateProduct() {
     if (!review) return toast.error("Review is required!");
     try {
       // await axios.post("http://localhost:8000/", products);
-      await axios.post("crud-server-production.up.railway.app", products);
+      // await axios.post("crud-server-production.up.railway.app", products);
+      // FIX THIS:
+      await axios.post(
+        "https://crud-server-production.up.railway.app/products",
+        products,
+      );
       toast.success("Product created successfully!");
       navigate("/");
     } catch (error) {

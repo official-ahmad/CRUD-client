@@ -11,9 +11,21 @@ function Products() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   async function fetchProducts() {
-    const res = await axios.get("crud-server-production.up.railway.app");
-    console.log(res);
-    setProducts(res.data);
+    try {
+      const res = await axios.get(
+        "https://crud-server-production.up.railway.app/products",
+      );
+
+      // Ensure we only set state if the response is actually an array
+      if (Array.isArray(res.data)) {
+        setProducts(res.data);
+      } else {
+        setProducts([]);
+      }
+    } catch (err) {
+      console.error("Fetch failed:", err);
+      toast.error("Failed to load products");
+    }
   }
   // fetchProducts();    we cannot use this here as it will create infinite loop
 
