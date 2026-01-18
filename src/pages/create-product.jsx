@@ -3,6 +3,7 @@ import { Button, Form, Card } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 function CreateProduct() {
   const [products, setProducts] = useState({
@@ -15,7 +16,6 @@ function CreateProduct() {
   });
 
   const navigate = useNavigate();
-  
 
   function changeHandler(e) {
     const { name, value } = e.target;
@@ -53,7 +53,7 @@ function CreateProduct() {
       console.error(error);
     }
   }
-  useffect(() => {
+  useEffect(() => {
     CreateProduct();
   }, []);
 
