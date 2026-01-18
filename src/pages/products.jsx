@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Card, Button, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import "./products.css";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 function Products() {
   const [products, setProducts] = useState([]);
