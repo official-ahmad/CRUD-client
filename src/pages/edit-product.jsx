@@ -12,7 +12,7 @@ function EditProduct() {
   async function fetchProduct() {
     // const product = await axios.get(`http://localhost:8000/${params.id}`);
     const product = await axios.get(
-      `crud-server-production.up.railway.app${params.id}`,
+      `crud-server-production.up.railway.app/products${params.id}`,
     );
     console.log(product.data);
     setProductData(product.data);
@@ -38,7 +38,7 @@ function EditProduct() {
     try {
       // await axios.patch(`http://localhost:8000/${params.id}`, productData);
       await axios.patch(
-        `crud-server-production.up.railway.app${params.id}`,
+        `https://crud-server-production.up.railway.app/products${params.id}`,
         productData,
       );
       toast.success("Product Updated successfully!");
