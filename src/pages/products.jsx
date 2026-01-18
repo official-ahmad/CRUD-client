@@ -71,11 +71,19 @@ function Products() {
                     className="card-img-top"
                     src={
                       meriProduct.image ||
-                      `https://source.unsplash.com/featured/?${meriProduct.title.replace(/\s+/g, ",")}`
+                      `https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=500` // Fallback Image
                     }
                     onError={(e) => {
-                      e.target.src =
-                        "https://via.placeholder.com/300x200?text=No+Image+Found";
+                      // Agar image fail ho, to placeholder set karein
+                      // Lekin check karein ke kahin loop na ban jaye
+                      if (
+                        e.target.src !==
+                        "https://placehold.co/300x200?text=No+Image"
+                      ) {
+                        e.target.onerror = null; // Yeh line loop ko rok degi
+                        e.target.src =
+                          "https://placehold.co/300x200?text=No+Image";
+                      }
                     }}
                   />
                 </div>

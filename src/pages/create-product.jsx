@@ -15,6 +15,7 @@ function CreateProduct() {
   });
 
   const navigate = useNavigate();
+  
 
   function changeHandler(e) {
     const { name, value } = e.target;
@@ -52,6 +53,9 @@ function CreateProduct() {
       console.error(error);
     }
   }
+  useffect(() => {
+    CreateProduct();
+  }, []);
 
   return (
     <div className="w-50 mx-auto mt-4 my-4">
