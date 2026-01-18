@@ -11,14 +11,7 @@ function Products() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   async function fetchProducts() {
-    // Fetching all products from the server by using fetch method
-
-    // const res = await fetch("http://localhost:8000/");
-    // console.log("res", res);
-    // const data = await res.json();
-    // console.log("data", data);
-
-    const res = await axios.get("https://crud-server-lkya.onrender.com/");
+    const res = await axios.get("crud-server-production.up.railway.app");
     console.log(res);
     setProducts(res.data);
   }
@@ -30,24 +23,22 @@ function Products() {
   }, []);
 
   async function deleteProduct(id) {
-    const Product = await axios.delete(
-      `https://crud-server-lkya.onrender.com/${id}`
-    );
-    const singleProduct = products.filter((p) => p._id !== id);
-    setProducts(singleProduct);
-    toast.error("Deleted Permanently!");
-    // toast.custom((t) => (
-    //   <div
-    //     style={{
-    //       padding: "10px 20px",
-    //       background: "#ff4d4f",
-    //       color: "white",
-    //       borderRadius: "5px",
-    //     }}
-    //   >
-    //     Product removed permanently!
-    //   </div>
-    // ));
+    try {
+      // 1. Perform the API delete
+      await axios.delete(`crud-server-production.up.railway.appid/${id}`);
+
+      // 2. Safely filter the array
+      // We use (products || []) to ensure we are always calling .filter on an array
+      const remainingProducts = (products || []).filter((p) => p._id !== id);
+
+      // 3. Update state
+      setProducts(remainingProducts);
+
+      toast.error("Deleted Permanently!");
+    } catch (error) {
+      console.error("Delete failed:", error);
+      toast.error("Failed to delete product.");
+    }
   }
   return (
     <div className="w-75 mx-auto my-4 ">
