@@ -25,7 +25,11 @@ function Products() {
   async function deleteProduct(id) {
     try {
       // 1. Perform the API delete
-      await axios.delete(`crud-server-production.up.railway.appid/${id}`);
+      // await axios.delete(`crud-server-production.up.railway.appid/${id}`);
+      // Ensure the URL is exactly what your backend expects
+      await axios.delete(
+        `https://crud-server-production.up.railway.app/products/${id}`,
+      );
 
       // 2. Safely filter the array
       // We use (products || []) to ensure we are always calling .filter on an array
