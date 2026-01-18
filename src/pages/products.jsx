@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, Button, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import "./products.css";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -72,19 +71,11 @@ function Products() {
                     className="card-img-top"
                     src={
                       meriProduct.image ||
-                      `https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=500` // Fallback Image
+                      `https://source.unsplash.com/featured/?${meriProduct.title.replace(/\s+/g, ",")}`
                     }
                     onError={(e) => {
-                      // Agar image fail ho, to placeholder set karein
-                      // Lekin check karein ke kahin loop na ban jaye
-                      if (
-                        e.target.src !==
-                        "https://placehold.co/300x200?text=No+Image"
-                      ) {
-                        e.target.onerror = null; // Yeh line loop ko rok degi
-                        e.target.src =
-                          "https://placehold.co/300x200?text=No+Image";
-                      }
+                      e.target.src =
+                        "https://via.placeholder.com/300x200?text=No+Image+Found";
                     }}
                   />
                 </div>
