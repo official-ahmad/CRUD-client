@@ -1,9 +1,8 @@
-/* products.css */
+
 body {
-  background-color: #f8f9fa; /* Light grey background for contrast */
+  background-color: #f8f9fa; 
 }
 
-/* Card Container Styling */
 .card-style {
   border: none !important;
   border-radius: 12px !important;
@@ -18,14 +17,12 @@ body {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Force all images to be the same height and crop correctly */
 .card-img-top {
   height: 200px;
   object-fit: cover; 
   border-bottom: 1px solid #eee;
 }
 
-/* Typography & Spacing */
 .card-title {
   font-size: 1.1rem;
   font-weight: 700;
@@ -38,15 +35,12 @@ body {
   font-size: 0.9rem;
   margin-bottom: 5px !important;
 }
-
-/* Price Highlight */
 .price-text {
   font-weight: 800;
-  color: #28a745; /* Green for price */
+  color: #28a745; 
   font-size: 1.1rem;
 }
 
-/* Icon Interactions */
 .gap-3 svg {
   cursor: pointer;
   font-size: 1.2rem;
@@ -54,16 +48,15 @@ body {
 }
 
 .fa-trash:hover {
-  color: #dc3545 !important; /* Red on hover */
+  color: #dc3545 !important; 
   transform: scale(1.2);
 }
 
 .fa-edit:hover {
-  color: #0d6efd !important; /* Blue on hover */
+  color: #0d6efd !important; 
   transform: scale(1.2);
 }
 
-/* Header Styling */
 h1 {
   font-weight: 800;
   letter-spacing: -1px;

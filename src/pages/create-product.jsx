@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Button, Form, Card } from "react-bootstrap";
+import { Button, Form, Card, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
 
 function CreateProduct() {
   const [products, setProducts] = useState({
@@ -15,6 +14,7 @@ function CreateProduct() {
     image: "",
   });
 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   function changeHandler(e) {
@@ -24,38 +24,37 @@ function CreateProduct() {
 
   async function submitHandler(e) {
     e.preventDefault();
+    const { title, desc, price, image } = products;
 
-    const { title, desc, price, rating, review, image } = products;
+    // Basic Validation
+    if (!title || !desc || !price) {
+      return toast.error("Please fill in all required fields!");
+    }
 
-    if (!title) return toast.error("Title is required!");
-    if (!desc) return toast.error("Description is required!");
-    if (!price) return toast.error("Price is required!");
+    setLoading(true);
+    const searchKeyword = title.trim().replace(/\s+/g, ",");
+    const autoImage = `https://source.unsplash.com/800x600/?${searchKeyword}`;
 
-    // DYNAMIC AUTO-IMAGE LOGIC
-    // Agar user ne koi image link NAHI diya, to hum title ke mutabiq Unsplash se image lenge
-    // Naya aur fast URL format:
-    const autoImage = `https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=500&auto=format&fit=crop&keyword=${title.replace(/\s+/g, ",")}`;
+    // Alternative: If source.unsplash is slow, use this more modern format:
+    // const autoImage = `https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80`;
 
     const finalData = {
       ...products,
-      image: image || autoImage, // Priority user ke link ko di jayegi, warna auto.
+      image: image.trim() !== "" ? image : autoImage,
     };
 
     try {
-      await axios.post(
-        "https://crud-server-production.up.railway.app/products",
-        finalData,
-      );
-      toast.success(`${title} created successfully!`);
+      await axios.post("http://localhost:8000/products", finalData);
+
+      toast.success(`${title} published successfully!`);
       navigate("/");
     } catch (error) {
-      toast.error("Failed to create product!");
+      toast.error("Server Error: Could not save product.");
       console.error(error);
+    } finally {
+      setLoading(false); 
     }
   }
-  useEffect(() => {
-    CreateProduct();
-  }, []);
 
   return (
     <div className="w-50 mx-auto mt-4 my-4">
@@ -65,18 +64,18 @@ function CreateProduct() {
       >
         <h2 className="fst-italic mb-4 text-center">✨ Create New Product</h2>
         <Form onSubmit={submitHandler}>
-          {/* Title Input: Yahi decide karega image kaisi hogi */}
           <Form.Group className="mb-3">
             <Form.Label className="fw-bold">Product Title</Form.Label>
             <Form.Control
               type="text"
               name="title"
-              placeholder="e.g. Shoes, Watch, Shirt"
+              required
+              placeholder="e.g. Nike Shoes, Rolex Watch"
               value={products.title}
               onChange={changeHandler}
             />
             <Form.Text className="text-muted small">
-              Hum title ke hisaab se image khud hi dhoond lenge!
+              We'll use this title to automatically find a cool image!
             </Form.Text>
           </Form.Group>
 
@@ -86,7 +85,8 @@ function CreateProduct() {
               as="textarea"
               rows={2}
               name="desc"
-              placeholder="Product details..."
+              required
+              placeholder="Write a short catchy description..."
               value={products.desc}
               onChange={changeHandler}
             />
@@ -99,6 +99,7 @@ function CreateProduct() {
                 <Form.Control
                   type="number"
                   name="price"
+                  required
                   value={products.price}
                   onChange={changeHandler}
                 />
@@ -110,9 +111,9 @@ function CreateProduct() {
                 <Form.Control
                   type="number"
                   name="rating"
+                  min="1"
+                  max="5"
                   value={products.rating}
-                  min={1}
-                  max={5}
                   onChange={changeHandler}
                 />
               </Form.Group>
@@ -121,22 +122,23 @@ function CreateProduct() {
 
           <Form.Group className="mb-3 text-muted" style={{ opacity: 0.7 }}>
             <Form.Label className="small">
-              Optional: Image URL Override
+              Custom Image URL (Optional)
             </Form.Label>
             <Form.Control
               type="text"
               name="image"
-              placeholder="Paste custom link or leave empty"
+              placeholder="https://example.com/image.jpg"
               value={products.image}
               onChange={changeHandler}
             />
           </Form.Group>
 
           <Form.Group className="mb-4">
-            <Form.Label className="fw-bold">Review</Form.Label>
+            <Form.Label className="fw-bold">Top Review</Form.Label>
             <Form.Control
               type="text"
               name="review"
+              placeholder="What do customers say?"
               value={products.review}
               onChange={changeHandler}
             />
@@ -148,8 +150,16 @@ function CreateProduct() {
               variant="dark"
               size="lg"
               className="rounded-pill"
+              disabled={loading}
             >
-              Publish Product
+              {loading ? (
+                <>
+                  <Spinner animation="border" size="sm" className="me-2" />
+                  Publishing...
+                </>
+              ) : (
+                "Publish Product"
+              )}
             </Button>
           </div>
         </Form>
